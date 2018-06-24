@@ -1,29 +1,117 @@
 ﻿Public Class Jugador
-    'La palabra, el tiempo, los puntos, 
-    'adivinada: array del mismo tamaño de palabra con las letras en orden'
+    Dim _palabra As String
+    Dim _tiempo As Integer
+    Dim _puntos As Integer
+    Dim _adivinada() As String
+
+    Public Property Palabra As String
+        Get
+            Return _palabra
+        End Get
+        Set(value As String)
+            _palabra = value
+        End Set
+    End Property
+
+    Public Property Tiempo As Integer
+        Get
+            Return _tiempo
+        End Get
+        Set(value As Integer)
+            _tiempo = value
+
+        End Set
+    End Property
+
+    Public Property Puntos As Integer
+        Get
+            Return _puntos
+        End Get
+        Set(value As Integer)
+            _puntos = value
+        End Set
+    End Property
+
+    Public Property Adivinada As String()
+        Get
+            Return _adivinada
+        End Get
+        Set(value As String())
+            _adivinada = value
+        End Set
+    End Property
+
+    '*******************metodos*************************************
 
     'recibe la letra y verifica si existe
     'retorna true si acerto y false si fallo
     Public Function verificarLetra(letra As String) As Boolean
-        'verifica si la letra existe en palabra
-        'en cuales posiciones y cuantas veces
-        'y las agrega en las mismas posiciones al array
-        'retorna true si acerto
-        'sino baja 1 punto
+        Dim acerto As Boolean
+        acerto = False
+
+        For i As Integer = 0 To Palabra.Length
+
+            If letra = Palabra(i) Then
+                Adivinada(i) = letra
+                acerto = True
+
+            End If
+
+        Next
+        If acerto = False Then
+            Puntos -= 1
+
+        End If
+        Return acerto
+
     End Function
 
+    'verifica si la palabra es correcta y mata al judador de lo contrario 
     Public Function verificarPalabra(palabraAdivinada As String) As Boolean
-        'verifica si la palabra es igual a la palabraadivinada
-        'sino deja los puntos en 0
-        'si es entonces copia palabra en adivinada
-    End Function
+        Dim acerto As Boolean
+        acerto = False
 
+        If palabraAdivinada = Palabra Then
+            acerto = True
+
+            For i As Integer = 0 To Palabra.Length
+
+                Adivinada(i) = Palabra(i)
+
+            Next
+            If acerto = False Then
+                Puntos = 0
+            End If
+
+        End If
+        Return acerto
+    End Function
+    'acumula el tiempo del jugador
     Public Sub subirTiempo(tiempo As Integer)
-        'le aumenta el tiempo al jugador
+
+        _tiempo += tiempo
     End Sub
 
-    Public Function estaVivo() As Boolean
-        'retorna true si los puntos son mas que cero y si adivinada es diferente a palabra
-        'retorn false si puntos son 0 o adivinada es igual a palabra
+    'verifica si el jugador continua activo
+    Public Function estaActivo() As Boolean
+        Dim vivo As Boolean
+        vivo = False
+        Dim diferentes As Boolean
+        diferentes = False
+
+        For i As Integer = 0 To Palabra.Length - 1
+
+            If Adivinada(i) <> Palabra(i) Then
+                diferentes = True
+            End If
+        Next
+        If Puntos > 0 And diferentes = True Then
+            vivo = True
+        Else
+            vivo = False
+
+        End If
+        Return vivo
+
     End Function
 End Class
